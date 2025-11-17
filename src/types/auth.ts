@@ -1,13 +1,20 @@
-// Explanation: TypeScript interfaces for authentication-related data structures.
-// This ensures type safety across the application when working with user data.
+// Explanation: Simplified user types that work with Supabase's built-in types
+// We extend the basic User type from Supabase with our custom fields
+
 export interface User {
   id: string
-  email: string
-  username: string
-  full_name: string
+  email?: string
+  user_metadata?: {
+    username?: string
+    full_name?: string
+    avatar_url?: string
+  }
+  // Our custom fields that will be stored in profiles table
+  username?: string
+  full_name?: string
   avatar_url?: string
   bio?: string
-  created_at: string
+  created_at?: string
 }
 
 export interface AuthState {
