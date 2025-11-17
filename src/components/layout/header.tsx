@@ -1,10 +1,22 @@
 'use client'
 
+import { useAuth } from '@/app/hooks/use-auth'
+// Explanation: Fixed header component with proper exports
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
+
 export function Header() {
   const pathname = usePathname()
+  const { user, signOut } = useAuth()
+
+  const handleSignOut = async () => {
+    try {
+      await signOut()
+    } catch (error) {
+      console.error('Error signing out:', error)
+    }
+  }
 
   return (
     <header className="border-b border-gray-200 bg-white">
@@ -25,31 +37,52 @@ export function Header() {
               >
                 Home
               </Link>
-              <Link
-                href="/create"
-                className={`px-3 py-2 text-sm font-medium ${
-                  pathname === '/create' 
-                    ? 'text-gray-900' 
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Write
-              </Link>
+              {user && (
+                <Link
+                  href="/create"
+                  className={`px-3 py-2 text-sm font-medium ${
+                    pathname === '/create' 
+                      ? 'text-gray-900' 
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Write
+                </Link>
+              )}
             </nav>
           </div>
           <div className="flex items-center space-x-4">
-            <Link
-              href="/login"
-              className="text-sm font-medium text-gray-500 hover:text-gray-700"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/signup"
-              className="rounded-full bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
-            >
-              Get Started
-            </Link>
+            {user ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  className="text-sm font-medium text-gray-500 hover:text-gray-700"
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="text-sm font-medium text-gray-500 hover:text-gray-700"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="text-sm font-medium text-gray-500 hover:text-gray-700"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  className="rounded-full bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
